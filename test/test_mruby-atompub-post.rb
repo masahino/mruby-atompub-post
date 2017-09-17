@@ -4,4 +4,4 @@ class TestMrubyAtompubPost < MTest::Unit::TestCase
   end
 end
 
-MTest::Unit.new.run
+#MTest::Unit.new.run

@@ -18,7 +18,7 @@ module AtomPubPost
     # 1つじゃない?
     def uri
 #      @doc.xpath('//xmlns:link[@rel="alternate"]/@href').to_s
-      workspace = @xml.first_child.next_sibling.first_child
+      workspace = @xml.first_child.next_sibling #.first_child
       e = workspace.first_child_element('link')
       while e != nil
         if e.attribute('rel') == 'alternate'
@@ -45,7 +45,10 @@ module AtomPubPost
     end
 
     def title
-      @doc.xpath("//xmlns:title").text
+#      @doc.xpath("//xmlns:title").text
+      workspace = @xml.first_child.next_sibling
+      e = workspace.first_child_element('title')
+      e.get_text
     end
   end
 end
