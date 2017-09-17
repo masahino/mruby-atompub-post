@@ -23,7 +23,7 @@ module AtomPubPost
 EOF
         data += "<title>#{title.chomp}</title>\n"
         data += "<content type=\"text/html\" xml:lang=\"ja\">\n"
-        data += CGI::escapeHTML(content)
+        data += HTML::escape(content)
         data += "</content>\n"
 
         if category != nil

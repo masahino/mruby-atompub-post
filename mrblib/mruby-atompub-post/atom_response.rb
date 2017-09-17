@@ -17,13 +17,22 @@ module AtomPubPost
 
     # 1つじゃない?
     def uri
-      @doc.xpath('//xmlns:link[@rel="alternate"]/@href').to_s
+#      @doc.xpath('//xmlns:link[@rel="alternate"]/@href').to_s
+      workspace = @xml.first_child.next_sibling.first_child
+      e = workspace.first_child_element('link')
+      while e != nil
+        if e.attribute('rel') == 'alternate'
+          return e.attribute('href')
+        end
+      end
+      return nil
     end
 
     def collection_uri
       uri_a = []
       workspace = @xml.first_child.next_sibling.first_child
       e = workspace.first_child_element('collection')
+
       while e != nil
         uri_a.push(e.attribute('href'))
         e = e.next_sibling_element('collection')

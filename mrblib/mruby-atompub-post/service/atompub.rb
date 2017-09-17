@@ -46,7 +46,7 @@ module AtomPubPost
         http = SimpleHttp.new(uri.scheme, uri.host, uri.port)
         res = http.get(uri.path,
           authenticate(@username, @password, @authtype))
-        if res.code != 200
+        if res.code != 200 and res.code != 201
           puts res.body
           return false
         end
@@ -58,25 +58,24 @@ module AtomPubPost
           puts uri_str
         end
         uri = URI.parse(uri_str)
-        Net::HTTP.start(uri.host, uri.port) do |http|
-          res = http.post(uri.path, entry_xml,
-                          authenticate(@username, @password, @authtype).update({'Content-Type' => 'application/atom+xml'}))
-          case res.code
-          when "201"
-            edit_uri = res['Location']
-          when "404"
-            puts res.body
-            edit_uri = false
-          when "200"
-            puts res.body
-            edit_uri = false
-          else
-            puts "return code: " + res.code
-            puts "response: " + res.body
-            edit_uri = false
-          end
-          return edit_uri
+        http = SimpleHttp.new(uri.scheme, uri.host, uri.port)
+        res = http.post(uri.path, {'Body' => entry_xml}.merge(
+          authenticate(@username, @password, @authtype).update({'Content-Type' => 'application/atom+xml'})))
+        case res.code.to_s
+        when "201"
+          edit_uri = res['location']
+        when "404"
+          puts res.body
+          edit_uri = false
+        when "200"
+          puts res.body
+          edit_uri = false
+        else
+          puts "return code: " + res.code.to_s
+          puts "response: " + res.body
+          edit_uri = false
         end
+        return edit_uri
       end
 
       def edit_entry_intern(uri_str, entry_xml)
