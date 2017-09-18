@@ -71,6 +71,19 @@ module AtomPubPost
       @plugin.eval_post(entry)
     end
 
+    def send_trackback(entry)
+      entry.trackback_url_array.uniq!
+      entry.trackback_url_array.each do |trackback_url|
+        print "Send trackback to #{trackback_url} ? (y/n) "
+        ret = $stdin.gets.chomp
+        pp ret
+        if ret == "y" or ret == "Y"
+          TrackBack.send(trackback_url, @conf.blog_title, entry.title,
+                         "", entry.alternate_uri)
+        end
+      end
+    end
+
     def check_config_user_and_pass
       if @conf.username == nil
         print "Username: "

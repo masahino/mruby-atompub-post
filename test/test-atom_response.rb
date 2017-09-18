@@ -1,4 +1,4 @@
-class TestMrubyAtompubPost < MTest::Unit::TestCase
+class TestMrubyAtompubPostAtomResponse < MTest::Unit::TestCase
   def setup
     @test_xml =<<EOF
 <?xml version="1.0" encoding="UTF-8"?>

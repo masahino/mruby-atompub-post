@@ -29,7 +29,10 @@ module AtomPubPost
       filename = File.basename(filename)
       @edit_uri_h[filename] = edit_uri
       if @yaml_file_name != nil
-        YAML.dump(@edit_uri_h, File.open(@yaml_file_name, 'w'))
+        yaml_str = YAML.dump(@edit_uri_h)
+        File.open(@yaml_file_name, 'w') do |f|
+          f.write yaml_str
+        end
       end
     end
     
