@@ -84,6 +84,27 @@ module AtomPubPost
       end
     end
 
+    # ファイル名と同じ名前で拡張子が、"jpg"のファイルがあったら
+    # アップロードしてエントリーの先頭に入れる。
+    def check_image_file(filename, src_text)
+      ext_list = ['.jpg', '.png']
+      ext_list.each do |ext|
+        img_filename = File::basename(filename)[0..-5] + ext
+        img_filename = File::dirname(filename) + "/" + img_filename
+        if $DEBUG
+          puts img_filename
+        end
+        if File::exist?(img_filename) == true
+          src_text = "#img(#{img_filename})\n\n" + src_text
+          break
+        end
+      end
+      if $DEBUG
+        puts src_text
+      end
+      return src_text
+    end
+
     def check_config_user_and_pass
       if @conf.username == nil
         print "Username: "

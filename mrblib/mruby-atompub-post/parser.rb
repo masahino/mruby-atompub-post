@@ -198,7 +198,7 @@ module AtomPubPost
       if img_title == nil
         img_title = File.basename(img_path)
       end
-      img_manager = LDBlogWriter::EntryManager.new(@conf.upload_uri_file)
+      img_manager = AtomPubPost::EntryManager.new(@conf.upload_uri_file)
       if img_manager.has_entry?(File.basename(img_path)) == false
         # 新規アップロード
         img_uri = @service.post_image(img_path, img_title)
@@ -219,34 +219,30 @@ module AtomPubPost
     end
 
     def a_href(uri, label, cssclass)
-      if @conf.auto_trackback == true
-        open(uri) do |f|
-          if f.content_type =~ /^image/
-            return get_img_html(uri, label)
-          elsif f.content_type != "text/html"
-            break
-          end
-          contents = f.read
-          trackback_ping = []
-          contents.scan(%r|<rdf:Description\s+([^>]+)>|) do |attr|
-            attr[0].scan(%r|\s+([^=]+)="([^\"]+)"|) do |key, value|
-              trackback_ping << value if key == 'trackback:ping'
-            end
-          end
-          if @entry != nil
-            @entry.trackback_url_array += trackback_ping
-          end
-        end
-      end
+#      if @conf.auto_trackback == true
+#        open(uri) do |f|
+#          if f.content_type =~ /^image/
+#            return get_img_html(uri, label)
+#          elsif f.content_type != "text/html"
+#            break
+#          end
+#          contents = f.read
+#          trackback_ping = []
+#          contents.scan(%r|<rdf:Description\s+([^>]+)>|) do |attr|
+#            attr[0].scan(%r|\s+([^=]+)="([^\"]+)"|) do |key, value|
+#              trackback_ping << value if key == 'trackback:ping'
+#            end
+#          end
+#          if @entry != nil
+#            @entry.trackback_url_array += trackback_ping
+#          end
+#        end
+#      end
       %Q[<a class="#{cssclass}" href="#{escape_html(uri)}">#{escape_html(label)}</a>]
     end
 
     def parse_inline(str)
-      @inline_re ||= %r<
-        ([&<>"])                             # $1: HTML escape characters
-      | \[\[(.+?):\s*(https?://\S+)\s*\]\]   # $2: label, $3: URI
-      | (#{URI.regexp('http')})              # $5...: URI autolink
-      >x
+      @inline_re ||= %r<([&<>"])|\[\[(.+?):\s*(https?://\S+)\s*\]\]|(#{URI.regexp(['http'])})>x
       str.gsub(@inline_re) {
         case
         when htmlchar = $1 then escape_html(htmlchar)

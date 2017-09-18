@@ -12,4 +12,9 @@ MRuby::Gem::Specification.new('mruby-atompub-post') do |spec|
   spec.add_dependency 'mruby-env', :mgem => 'mruby-env'
   spec.add_dependency 'mruby-dir-glob', :mgem => 'mruby-dir-glob'
   spec.add_dependency 'mruby-yaml', :mgem => 'mruby-yaml'
+  spec.add_dependency 'mruby-uri', :mgem => 'mruby-uri'
+  spec.add_dependency 'mruby-simplehttp', :mgem => 'mruby-simplehttp'
+  spec.add_dependency 'mruby-time-strftime', :mgem => 'mruby-time-strftime'
+  spec.add_dependency 'mruby-random'
+  spec.add_dependency 'mruby-digest'
 end
